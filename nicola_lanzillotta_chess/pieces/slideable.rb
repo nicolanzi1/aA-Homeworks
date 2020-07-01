@@ -24,8 +24,8 @@ module Slideable
     def moves
         moves = []
 
-        moves_dirs.each do |dx, dy|
-            moves.concar(grow_unblocked_moves_in_dir(dx, dy))
+        move_dirs.each do |dx, dy|
+            moves.concat(grow_unblocked_moves_in_dir(dx, dy))
         end
 
         moves
@@ -33,7 +33,7 @@ module Slideable
 
     private
 
-    def moves_dirs
+    def move_dirs
         raise NotImplementedError
     end
 

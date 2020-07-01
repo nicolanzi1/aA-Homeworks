@@ -12,7 +12,7 @@ class Piece
     end
 
     def to_s
-        " #{symbol}"
+        " #{symbol} "
     end
 
     def empty?
@@ -20,7 +20,7 @@ class Piece
     end
 
     def symbol
-        raise NotImpletentedError
+        raise NotImplementedError
     end
 
     def valid_moves

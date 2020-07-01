@@ -1,5 +1,5 @@
-require 'colorize'
-require_relative 'cursor'
+require "colorize"
+require_relative "cursor"
 
 class Display
     attr_reader :board, :cursor, :notifications
@@ -17,7 +17,7 @@ class Display
     end
 
     def build_row(row, i)
-        row.map.with_index do |piece, i|
+        row.map.with_index do |piece, j|
             color_options = colors_for(i, j)
             piece.to_s.colorize(color_options)
         end
@@ -34,6 +34,18 @@ class Display
             bg = :light_yellow
         end
         { background: bg }
+    end
+
+    def reset!
+        @notifications.delete(:error)
+    end
+
+    def uncheck!
+        @notifications.delete(:check)
+    end
+
+    def set_check!
+        @notifications[:check] = "Check!"
     end
 
     def render

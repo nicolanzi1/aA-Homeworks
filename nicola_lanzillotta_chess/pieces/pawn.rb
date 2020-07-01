@@ -1,9 +1,6 @@
 require_relative 'piece'
-require_relative 'stepable'
 
 class Pawn < Piece
-    include Stepable
-
     def symbol
         '♟'.colorize(color)
     end
@@ -24,7 +21,7 @@ class Pawn < Piece
 
     def forward_steps
         i, j = pos
-        one_step = [i + forward, j]
+        one_step = [i + forward_dir, j]
         return [] unless board.valid_pos?(one_step) && board.empty?(one_step)
 
         steps = [one_step]
@@ -40,7 +37,7 @@ class Pawn < Piece
 
         side_moves.select do |new_pos|
             next false unless board.valid_pos?(new_pos)
-            next false if board.empty(new_pos)
+            next false if board.empty?(new_pos)
 
             threatened_piece = board[new_pos]
             threatened_piece && threatened_piece.color != color

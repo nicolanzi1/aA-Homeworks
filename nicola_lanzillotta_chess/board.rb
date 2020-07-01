@@ -36,6 +36,16 @@ class Board
         end
     end
 
+    def dup
+        new_board = Board.new(false)
+
+        pieces.each do |piece|
+            piece.class.new(piece.color, new_board, piece.pos)
+        end
+
+        new_board
+    end
+
     def empty?(pos)
         self[pos].empty?
     end
@@ -55,7 +65,7 @@ class Board
             raise "You must move your own piece"
         elsif !piece.moves.include?(end_pos)
             raise "Piece does not move like that"
-        elsif !piece.valid.moves.include?(end_pos)
+        elsif !piece.valid_moves.include?(end_pos)
             raise "You cannot move into check"
         end
 
@@ -66,7 +76,7 @@ class Board
         piece = self[start_pos]
         raise "piece cannot move like that" unless piece.moves.include?(end_pos)
 
-        self[end_pos] = pos
+        self[end_pos] = piece
         self[start_pos] = sentinel
         piece.pos = end_pos
 
@@ -101,6 +111,11 @@ class Board
         8.times { |j| Pawn.new(color, self, [i, j]) }
     end
 
+    def find_king(color)
+        king_pos = pieces.find { |p| p.color == color && p.is_a?(King) }
+        king_pos || (raise 'king not found?')
+    end
+
     def make_starting_grid(fill_board)
         @rows = Array.new(8) { Array.new(8, sentinel) }
         return unless fill_board
@@ -108,10 +123,5 @@ class Board
             fill_back_row(color)
             fill_pawns_row(color)
         end
-    end
-
-    def find_king(color)
-        king_pos = pieces.find { |p| p.color == color && p.is_a?(King) }
-        king_pos || (raise 'king not found?')
     end
 end
