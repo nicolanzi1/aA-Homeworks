@@ -28,8 +28,23 @@ class Board
         self[pos] = piece
     end
 
+    def checkmate?(color)
+        return false unless in_check?(color)
+
+        pieces.select { |p| p.color == color }.all? do |piece|
+            piece.valid_moves.empty?
+        end
+    end
+
     def empty?(pos)
         self[pos].empty?
+    end
+
+    def in_check?(color)
+        king_pos = find_king(color).pos
+        pieces.any? do |p|
+            p.color != color && p.moves.include?(king_pos)
+        end
     end
 
     def move_piece(turn_color, start_pos, end_pos)
@@ -93,5 +108,10 @@ class Board
             fill_back_row(color)
             fill_pawns_row(color)
         end
+    end
+
+    def find_king(color)
+        king_pos = pieces.find { |p| p.color == color && p.is_a?(King) }
+        king_pos || (raise 'king not found?')
     end
 end
